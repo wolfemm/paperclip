@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 
 describe Paperclip::Attachment do
@@ -52,6 +51,22 @@ describe Paperclip::Attachment do
     expect(dummy.avatar.path(:small)).to exist
     expect(dummy.avatar.path(:large)).to exist
     expect(dummy.avatar.path(:original)).to exist
+  end
+
+  it "reprocess works with virtual content_type attribute" do
+    rebuild_class styles: { small: "100x>" }
+    modify_table { |t| t.remove :avatar_content_type }
+    Dummy.send :attr_accessor, :avatar_content_type
+    Dummy.validates_attachment_content_type(
+      :avatar,
+      content_type: %w(image/jpeg image/png)
+    )
+    Dummy.create!(avatar: File.new(fixture_file("50x50.png"), "rb"))
+
+    dummy = Dummy.first
+    dummy.avatar.reprocess!(:small)
+
+    expect(dummy.avatar.path(:small)).to exist
   end
 
   context "having a not empty hash as a default option" do
@@ -1401,7 +1416,7 @@ describe Paperclip::Attachment do
 
     context "and avatar_file_size column" do
       before do
-        ActiveRecord::Base.connection.add_column :dummies, :avatar_file_size, :integer
+        ActiveRecord::Base.connection.add_column :dummies, :avatar_file_size, :bigint
         rebuild_class
         @dummy = Dummy.new
       end

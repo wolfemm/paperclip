@@ -1,6 +1,28 @@
 Paperclip
 =========
 
+# Deprecated
+
+**[Paperclip is deprecated]**.
+
+For new projects, we recommend Rails' own [ActiveStorage].
+
+For existing projects, please consult and contribute to [the migration guide] ([en español]).
+
+
+We will leave the Issues open as a discussion forum _only_. We do _not_
+guarantee a response from us in the Issues.
+
+We are no longer accepting pull requests _except_ pull requests against the
+migration guide. All other pull requests will be closed without merging.
+
+[Paperclip is deprecated]: https://robots.thoughtbot.com/closing-the-trombone
+[ActiveStorage]: http://guides.rubyonrails.org/active_storage_overview.html
+[the migration guide]: https://github.com/thoughtbot/paperclip/blob/master/MIGRATING.md
+[en español]: https://github.com/thoughtbot/paperclip/blob/master/MIGRATING-ES.md
+
+# Existing documentation
+
 ## Documentation valid for `master` branch
 
 Please check the documentation for the paperclip version you are using:
@@ -341,7 +363,7 @@ Lastly, you can also define multiple validations on a single attachment using `v
 
 ```ruby
 validates_attachment :avatar, presence: true,
-  content_type: { content_type: "image/jpeg" },
+  content_type: "image/jpeg",
   size: { in: 0..10.kilobytes }
 ```
 
@@ -368,7 +390,7 @@ afterwards, then assign manually:
 ```ruby
 class Book < ActiveRecord::Base
   has_attached_file :document, styles: { thumbnail: "60x60#" }
-  validates_attachment :document, content_type: { content_type: "application/pdf" }
+  validates_attachment :document, content_type: "application/pdf"
   validates_something_else # Other validations that conflict with Paperclip's
 end
 
@@ -400,7 +422,7 @@ image-y ones:
 
 ```ruby
 validates_attachment :avatar,
-  content_type: { content_type: ["image/jpeg", "image/gif", "image/png"] }
+  content_type: ["image/jpeg", "image/gif", "image/png"]
 ```
 
 `Paperclip::ContentTypeDetector` will attempt to match a file's extension to an
